@@ -1,16 +1,17 @@
 import { Search, User, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
     <header className="bg-card border-b border-border shadow-card sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center space-x-2">
+        <Link to="/" className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-gradient-hero rounded-full"></div>
           <h1 className="text-xl font-bold text-foreground">SwapStyle</h1>
-        </div>
+        </Link>
 
         {/* Search Bar - Hidden on mobile */}
         <div className="hidden md:flex flex-1 max-w-md mx-8">
@@ -25,6 +26,16 @@ const Header = () => {
 
         {/* User Actions */}
         <div className="flex items-center space-x-2">
+          <Link to="/dashboard">
+            <Button variant="ghost" size="sm">
+              Dashboard
+            </Button>
+          </Link>
+          <Link to="/admin">
+            <Button variant="ghost" size="sm">
+              Admin
+            </Button>
+          </Link>
           <Button variant="ghost" size="sm">
             Login
           </Button>
