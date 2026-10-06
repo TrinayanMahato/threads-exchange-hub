@@ -1,73 +1,141 @@
-# Welcome to your Lovable project
+# SwapStyle
 
-## Project info
+A community clothing-exchange platform — list the clothes you no longer wear, browse what
+others have offered, and arrange a swap locally instead of buying new.
 
-**URL**: https://lovable.dev/projects/e78147df-08b1-4a85-a125-3ed4b2dc808a
+Built with React 19, TypeScript, Vite, Tailwind CSS, and shadcn/ui.
 
-## How can I edit this code?
+> **Project status:** the full front end is built and navigable, running on mock data.
+> There is no backend wired up yet — see [Roadmap](#roadmap).
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## Table of Contents
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/e78147df-08b1-4a85-a125-3ed4b2dc808a) and start prompting.
+- [Why](#why)
+- [Features](#features)
+- [Screens](#screens)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [Roadmap](#roadmap)
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## Why
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Clothing is among the most wasteful consumer categories — garments are worn a handful of
+times and discarded while still perfectly wearable. SwapStyle treats a wardrobe as
+something circulating through a community rather than something you accumulate: every swap
+keeps a garment in use and takes one new purchase off the table.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## Features
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- **Item listings** — post a garment with photos, title, description, category, size, and
+  condition (Like New / Excellent / Good / Fair)
+- **Category browsing** — Women's, Men's, Kids' and more
+- **User dashboard** — manage your listings and review your full swap history, showing
+  what you gave and what you received in each exchange
+- **Admin dashboard** — user management, listings moderation (with a review queue), swap
+  statistics, and a user-feedback inbox with reply support
+- **Pickup locations** — each listing carries a meetup location so swaps stay local
+- **Dark mode** via `next-themes`
+- **Responsive** — built mobile-first
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+The landing page presents the platform's six pillars: eco-friendly swapping, verified
+users with safe pickup locations, quality review with post-swap ratings, a local
+community, easy meetups, and style-and-size based smart matching.
 
-# Step 3: Install the necessary dependencies.
-npm i
+---
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+## Screens
+
+| Route | Screen | Purpose |
+|---|---|---|
+| `/` | Landing | Hero, impact stats, feature overview, categories |
+| `/dashboard` | User dashboard | My Listings, Add New Listing, Swap History |
+| `/admin` | Admin dashboard | Users, Listings Management, Swaps, User Feedback |
+| `*` | Not Found | 404 fallback |
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | React 19 + TypeScript |
+| Build tool | Vite 7 |
+| Styling | Tailwind CSS + `tailwindcss-animate` |
+| Components | shadcn/ui (Radix UI primitives) |
+| Routing | React Router 7 |
+| Forms | React Hook Form + Zod validation |
+| Data fetching | TanStack Query |
+| Charts | Recharts |
+| Icons | Lucide |
+| Notifications | Sonner |
+
+---
+
+## Getting Started
+
+**Prerequisites:** Node.js 18+ and npm.
+
+```bash
+git clone https://github.com/TrinayanMahato/threads-exchange-hub.git
+cd threads-exchange-hub
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Vite serves the app at `http://localhost:5173`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Available Scripts
 
-**Use GitHub Codespaces**
+| Script | Description |
+|---|---|
+| `npm run dev` | Start the dev server with hot reload |
+| `npm run build` | Production build to `dist/` |
+| `npm run build:dev` | Build in development mode |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint` | Run ESLint |
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## Project Structure
 
-This project is built with:
+```
+src/
+├── App.tsx                  # Router and providers
+├── pages/
+│   ├── Index.tsx            # Landing page
+│   ├── UserDashboard.tsx    # Listings + swap history
+│   ├── AdminDashboard.tsx   # Moderation and platform stats
+│   └── NotFound.tsx
+├── components/
+│   ├── Header.tsx
+│   ├── Hero.tsx             # Headline, impact stats
+│   ├── Features.tsx         # The six platform pillars
+│   ├── Categories.tsx
+│   ├── Footer.tsx
+│   └── ui/                  # shadcn/ui component library
+├── assets/
+│   └── hero-clothing-swap.jpg
+└── App.css
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
+## Roadmap
 
-Simply open [Lovable](https://lovable.dev/projects/e78147df-08b1-4a85-a125-3ed4b2dc808a) and click on Share -> Publish.
+The UI is complete; what it needs next is a backend behind it.
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+- [ ] **Backend API** — currently every screen renders mock data; no `fetch`/API layer exists yet
+- [ ] **Authentication** — the landing page promises verified users; wire up real accounts
+- [ ] **Image uploads** — the "Click to upload photos" control needs real storage
+- [ ] **Swap requests** — propose, accept, and decline a swap between two users
+- [ ] **Smart matching** — implement the style/size suggestion algorithm the landing page advertises
+- [ ] **Messaging** — the secure messaging the Safe & Secure pillar describes
+- [ ] **Ratings** — post-swap reviews feeding the quality guarantee
+- [ ] Add a `LICENSE` file
