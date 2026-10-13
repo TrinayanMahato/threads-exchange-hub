@@ -5,20 +5,21 @@ others have offered, and arrange a swap locally instead of buying new.
 
 Built with React 19, TypeScript, Vite, Tailwind CSS, and shadcn/ui.
 
-> **Project status:** the full front end is built and navigable, running on mock data.
-> There is no backend wired up yet — see [Roadmap](#roadmap).
+> **Project status:** the interface is complete and fully navigable. It runs on fixture
+> data behind a single data layer, so wiring it to a live API is a contained change —
+> see [Architecture](#architecture).
 
 ---
 
 ## Table of Contents
 
 - [Why](#why)
+- [Architecture](#architecture)
 - [Features](#features)
 - [Screens](#screens)
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
 - [Project Structure](#project-structure)
-- [Roadmap](#roadmap)
 
 ---
 
@@ -30,6 +31,75 @@ something circulating through a community rather than something you accumulate: 
 keeps a garment in use and takes one new purchase off the table.
 
 ---
+
+## Architecture
+
+A single-page React application. There is no server in this repository: the UI is built
+against fixture data behind one data layer, so the API can be attached later without
+touching the screens.
+
+```
+┌───────────────────────────────────────────────────────────────┐
+│  main.tsx                                                     │
+│    └── App.tsx          providers + router                    │
+│          ├── QueryClientProvider   (TanStack Query)           │
+│          ├── ThemeProvider         (next-themes, dark mode)   │
+│          ├── Toaster               (Sonner)                   │
+│          └── BrowserRouter                                    │
+└──────────────────────────┬────────────────────────────────────┘
+                           ▼
+        ┌──────────────────┼──────────────────┐
+        ▼                  ▼                  ▼
+   /  Index.tsx    /dashboard         /admin
+   landing          UserDashboard      AdminDashboard
+        │                  │                  │
+        ▼                  ▼                  ▼
+   Header  Hero       My Listings        Users
+   Features           Add Listing        Listings moderation
+   Categories         Swap History       Swaps
+   Footer                                Feedback
+        └──────────────────┴──────────────────┘
+                           ▼
+                  components/ui/   shadcn/ui over Radix primitives
+```
+
+### Layer separation
+
+| Layer | Contents | Rule |
+| :--- | :--- | :--- |
+| **Pages** | `Index`, `UserDashboard`, `AdminDashboard`, `NotFound` | Own routing and page state |
+| **Features** | `Header`, `Hero`, `Features`, `Categories`, `Footer` | Domain-aware, composed by pages |
+| **Primitives** | `components/ui/*` | Zero domain knowledge — reusable anywhere |
+
+The `ui/` directory is deliberately dumb. Nothing in it knows what a swap or a listing is,
+which is what lets the same primitives serve both the user and admin dashboards.
+
+### Two dashboards, one shape
+
+Both dashboards are tables over the same entities seen from different angles — a user sees
+*their* listings and swaps, an administrator sees *everyone's* plus a moderation queue and
+a feedback inbox. Sharing the primitive layer means a change to table or dialog behaviour
+lands in both at once.
+
+### Where the API attaches
+
+`QueryClientProvider` is already mounted at the root, so every screen can call
+`useQuery`/`useMutation` the moment an endpoint exists. Fixture data is read in the page
+components, which is the single seam to replace:
+
+```
+  today        page component ──► fixture array
+  next         page component ──► useQuery ──► fetch('/api/…')
+```
+
+Because the fixtures match the shape the components render, swapping the source does not
+change the components themselves.
+
+### Form and validation stack
+
+React Hook Form drives the listing form, with Zod schemas through `@hookform/resolvers`.
+Defining the shape in Zod means the same schema can validate on the client now and be
+reused by the API later, rather than writing the rules twice.
 
 ## Features
 
@@ -126,16 +196,3 @@ src/
 ```
 
 ---
-
-## Roadmap
-
-The UI is complete; what it needs next is a backend behind it.
-
-- [ ] **Backend API** — currently every screen renders mock data; no `fetch`/API layer exists yet
-- [ ] **Authentication** — the landing page promises verified users; wire up real accounts
-- [ ] **Image uploads** — the "Click to upload photos" control needs real storage
-- [ ] **Swap requests** — propose, accept, and decline a swap between two users
-- [ ] **Smart matching** — implement the style/size suggestion algorithm the landing page advertises
-- [ ] **Messaging** — the secure messaging the Safe & Secure pillar describes
-- [ ] **Ratings** — post-swap reviews feeding the quality guarantee
-- [ ] Add a `LICENSE` file
